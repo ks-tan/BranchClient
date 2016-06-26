@@ -70,7 +70,7 @@ button:focus {
 		font-family: 'Open Sans', Sans-serif;
 		font-size: 18px;
 		position: absolute;
-		top: 8px;
+		top: 10px;
 		width: 132px;
 		overflow: hidden;
 		white-space: nowrap;
@@ -81,7 +81,7 @@ button:focus {
 		font-size: 10px;
 		position: absolute;
 		right: 10px;
-		top: 16px;
+		top: 18px;
 		color: cornsilk;
 		font-family: 'Open Sans', sans-serif;
 	}
