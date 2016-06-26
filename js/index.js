@@ -17,7 +17,9 @@ $(document).ready(function () {
         currentBranch = "main";
         $('.login-screen').hide();
         $('.main-container').fadeIn(1000);
-    	populateChat();
+        if (username == msg.username) {
+        	populateChat();
+        }
     });
 
    	socket.on('send room message', function(msg) {
