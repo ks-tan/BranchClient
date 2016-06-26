@@ -1,4 +1,5 @@
 var socket = io.connect('http://localhost:5000/branch');
+var avatarColorsList = ['#EE6D79','#71E096','#D6D6D6','#90D3F7'];
 var chatHistory = "";
 var currentBranch = "";
 var username = "";
@@ -19,7 +20,7 @@ $(document).ready(function () {
 
    	socket.on('send room message', function(msg) {
 		if (msg.branch == "main" && currentBranch == "main") {
-			cloneChatBubble(msg.message);
+			cloneChatBubble(msg);
 		}
     });
 
@@ -43,7 +44,7 @@ function populateChat(chatHistory) {
 				var messages = chatHistory[topic].messages;
 				if (topic == "main" && currentBranch == "main") {
 					for(var i = 0; i < messages.length; i++){
-						cloneChatBubble(messages[i].message);
+						cloneChatBubble(messages[i]);
 					}
 				} else {
 					//populate branch thread
@@ -90,14 +91,21 @@ function sendChat(){
     });
 }
 
-function cloneChatBubble(chatText){
+function cloneChatBubble(message){
+	var chatText = message.message;
+	var username = message.username;
+	var avatarLetter = username.charAt(0).toUpperCase();
+	var avatarColor = avatarColorsList[username.charCodeAt(0) % 4];
+	console.log(avatarColor);
 	if (chatText.length > 0) {
 		$('.text-input').val("");
 		$('.chat-item:first').clone()
 							.appendTo(".chat-container")
 							.show()
 							.animate({top: "+=75px"}, 500)
-							.find(".chat-bubble").html(chatText);
+							.find(".chat-bubble").html(chatText)
+							.parent().find(".chat-avatar").html(avatarLetter)
+														  .css("background-color",avatarColor);
 		$('.chat-container').scrollTop($('.chat-container')[0].scrollHeight);
 	}
 }
