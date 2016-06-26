@@ -49,7 +49,7 @@ $(document).ready(function () {
 
 function setHeader(topic, append) {
 	console.log(chatHistory[topic])
-	var d = new Date(chatHistory[topic].datetime * 1000);
+	if (chatHistory[topic].datetime > 0) var d = new Date(chatHistory[topic].datetime * 1000);
 	var sentimentString = '';
 	for (var sentiment in chatHistory[topic].sentiments) {
 		if (chatHistory[topic].sentiments[sentiment] == 'positive') {
@@ -67,7 +67,8 @@ function setHeader(topic, append) {
 		}
 		$('.branch-chat-container .header').show();
 		$('.branch-chat-container .header .activity').html(chatHistory[topic].activity);
-		$('.branch-chat-container .header .description').html(chatHistory[topic].location + ", " + d.toUTCString());
+		var descriptionString = d == null ? chatHistory[topic].location : chatHistory[topic].location + ", " + d.toUTCString();
+		$('.branch-chat-container .header .description').html(descriptionString);
 		$('.branch-chat-container .header .sentiments').html(sentimentString);
 	}
 }
