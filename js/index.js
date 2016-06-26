@@ -125,22 +125,24 @@ function cloneChatBubble(message){
 	var username = message.username;
 	var avatarLetter = username.charAt(0).toUpperCase();
 	var avatarColor = avatarColorsList[username.charCodeAt(0) % 4];
-	// console.log(avatarColor);
 	if (chatText.length > 0) {
 		$('.text-input').val("");
 		$('.chat-container div:nth-child(2)').addClass('first-chat-item');
 		$('.chat-container div:nth-last-child(2)').children().last().removeClass('animated-chat-line');
 		$('.chat-container').children().last().removeClass('last-chat-item');
 		$('.chat-container').children().last().children().last().addClass('animated-chat-line');
-		
 		$('.chat-item:first').clone()
 							.removeClass('animated-chat-line')
 							.appendTo(".chat-container")
 							.show()
 							.animate({top: "+=75px"}, 500)
 							.find(".chat-bubble").html(chatText)
+												 .css("background-color", message.isBranch ? "#6D5782" : "#FADBBF")
+												 .css("color", message.isBranch ? "#FFFFFF" : "#000000")
+												 .css("margin-left", message.isBranch ? "55px" : "0px")
 							.parent().find(".chat-avatar").html(avatarLetter)
-														  .css("background-color",avatarColor);
+														  .css("background-color",avatarColor)
+														  .css("display", message.isBranch ? "none" : "inline-block")
 		$('.chat-container').children().last().addClass('last-chat-item');
 		$('.chat-container').scrollTop($('.chat-container')[0].scrollHeight);
 	}
