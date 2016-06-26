@@ -21,7 +21,7 @@ $(document).ready(function () {
     });
 
    	socket.on('send room message', function(msg) {
-		cloneChatBubble(msg, msg.topic);
+		cloneChatBubble(msg, msg.branch);
     });
 
     $('li.conversation-item').click(function() {
@@ -126,7 +126,7 @@ function cloneChatBubble(message, topic){
 		$('.chat-container').children().last().removeClass('last-chat-item');
 		$('.chat-container').children().last().children().last().addClass('animated-chat-line');
 		$('.chat-item:first').clone()
-							.attr("data-branch", "test")
+							.attr("data-branch", topic)
 							.removeClass('animated-chat-line')
 							.appendTo(".chat-container")
 							.show()
