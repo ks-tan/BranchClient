@@ -206,6 +206,7 @@ function openBranchOnClickListener(branchMessage){
 		if (currentBranch == "main") {
 			//go to branch thread
 			currentBranch = branchMessage.find(".chat-bubble").html();
+
 			$('.chat-item').each(function(){
 				if ($(this).attr("data-branch") == "main") {
 					$(this).find(".chat-bubble").fadeOut(100);
@@ -214,10 +215,19 @@ function openBranchOnClickListener(branchMessage){
 												.html("");
 					if ($(this).attr("data-isBranch") && currentBranch == $(this).find(".chat-bubble").html()) {
 						$(this).find(".slant-line").fadeIn(100);
-						$(this).find(".chat-avatar").animate({height:"56px", width:"56px"},250,function(){
-							var sideBranchTopMargin = branchMessage.position().top;
-							$('.branch-chat-container').css("margin-top",sideBranchTopMargin)
-													   .css("display", "inline-block");
+						$(this).find(".chat-avatar").animate({
+							height:"56px", 
+							width:"56px"
+						},{
+							duration: 250, 
+							complete: function(){
+								var chatSectionTop = $('.chat-section')[0].offsetTop;
+								var branchMsgTop = branchMessage[0].offsetTop;
+								var sideBranchTopMargin = branchMsgTop - chatSectionTop;
+								console.log(sideBranchTopMargin);
+								$('.branch-chat-container').css("margin-top",sideBranchTopMargin)
+														   .css("display", "inline-block");
+							}
 						});
 					} else {
 						$(this).find(".chat-avatar").animate({height:"25px", width:"25px"},250);

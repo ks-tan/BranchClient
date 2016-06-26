@@ -205,14 +205,14 @@ li.conversation-item:not(.conversation-item-selected):hover {
 
 .chat-container {
 	display: inline-block;
-	height: 100px;
+	/* height: 100px; */
 	flex: 1 0 auto;
 	padding-bottom: 40px;
 }
 
 .branch-chat-container {
 	display: none;
-	height: 100px;
+	/* height: 100px; */
 	flex: 1 0 auto;
 	padding-bottom: 40px;
 	vertical-align: top;
@@ -224,7 +224,6 @@ li.conversation-item:not(.conversation-item-selected):hover {
 	width: 100%;
 	background-color: #6D5782;
 	border-radius: 10px;
-	margin-top: -55px;
 	color: #FFFFFF;
 	text-align: center;
 }
