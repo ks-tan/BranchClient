@@ -1,5 +1,6 @@
 var socket = io.connect('http://localhost:5000/branch');
 var chatHistory = "";
+var currentBranch = "";
 var username = "";
 var participants = [["Hayley", "Jack", "Jessica", "Jill", "You"], ["Brad", "Beth", "Margaret", "Steve", "Tyrone", "You"], ["Giselle", "Mams", "Pops", "You"]];
 var conversationTitles = ["Friends 5ever", "Bros 5lyf", "Family"];
@@ -12,10 +13,16 @@ $(document).ready(function () {
 
  	socket.on('joined room', function(msg) {
         chatHistory = msg.chat;
-        console.log(chatHistory);
+        currentBranch = "main";
         $('.login-screen').hide();
         $('.main-container').fadeIn(1000);
     	populateChat(chatHistory);
+    });
+
+   	socket.on('send room message', function(msg) {
+		if (msg.branch == "main" && currentBranch == "main") {
+			cloneChatBubble(msg.message);
+		}
     });
 
     $('li.conversation-item').click(function() {
@@ -33,11 +40,14 @@ function populateChat(chatHistory) {
 	if (!jQuery.isEmptyObject(chatHistory)) {
 		for (var topic in chatHistory) {
 			if (chatHistory.hasOwnProperty(topic)) {
-				console.log(chatHistory[topic]);
-				var currentMessages = chatHistory[topic]["messages"];
-				console.log(currentMessages);
-				var lastMesage = currentMessages[currentMessages.length - 1];
-				showFirstConversation(lastMesage.username + ": " + lastMesage.message);
+				var messages = chatHistory[topic].messages;
+				if (topic == "main" && currentBranch == "main") {
+					for(var i = 0; i < messages.length; i++){
+						cloneChatBubble(messages[i].message);
+					}
+				} else {
+					//populate branch thread
+				}
 			}
 		}
 	}
@@ -89,7 +99,11 @@ function updateLastMessage(conversation, lastMessage) {
 function sendChat(){
 	var chatText = $('.text-input').val();
 	chatText = chatText.replace(/</g, "&lt;").replace(/>/g, "&gt;");
-	cloneChatBubble(chatText);
+	socket.emit('room message', {
+        'branch_name': currentBranch, 
+        'message': chatText, 
+        'username':username
+    });
 }
 
 function cloneChatBubble(chatText){
