@@ -10,11 +10,19 @@ $(document).ready(function () {
 
  	socket.on('joined room', function(msg) {
         chatHistory = msg.chat;
+        console.log(chatHistory);
         $('.login-screen').hide();
         $('.main-container').fadeIn(1000);
+    	populateChat(chatHistory);
     });
 
 });
+
+function populateChat(chatHistory) {
+	if (!jQuery.isEmptyObject(chatHistory)) {
+
+	}
+}
 
 function loginButtonOnClickListener(){
 	$('.login-button').click(function(){
