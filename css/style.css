@@ -53,7 +53,7 @@ button:focus {
 	font-size: 18px;
 	}
 
-	ul.conversations {list-style: none;padding-left: 0px;margin-top: 0px;border-top-color: #FDB989;border-width: 1px 0px 0px 0px;border-style: solid;}
+	ul.conversations {list-style: none;padding-left: 0px;margin-top: 0px;border-color: #FDB989;border-width: 1px 0px 1px 0px;border-style: solid;}
 
 	.conversation-list {
 
