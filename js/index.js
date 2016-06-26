@@ -42,6 +42,8 @@ function populateChat(chatHistory) {
 			if (chatHistory.hasOwnProperty(topic)) {
 				var messages = chatHistory[topic].messages;
 				if (topic == "main" && currentBranch == "main") {
+					var lastMesage = messages[messages.length - 1];
+					showFirstConversation(lastMesage.username + ": " + lastMesage.message);
 					for(var i = 0; i < messages.length; i++){
 						cloneChatBubble(messages[i].message);
 					}
