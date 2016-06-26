@@ -1,4 +1,5 @@
 var socket = io.connect('http://localhost:5000/branch');
+var avatarColorsList = ['#EE6D79','#71E096','#698EE0','#93D4F4'];
 var chatHistory = "";
 var currentBranch = "";
 var username = "";
@@ -21,8 +22,7 @@ $(document).ready(function () {
 
    	socket.on('send room message', function(msg) {
 		if (msg.branch == "main" && currentBranch == "main") {
-			cloneChatBubble(msg.message);
-			updateLastMessage(getConversationFromIndex(0), msg);
+			cloneChatBubble(msg);
 		}
     });
 
@@ -46,7 +46,7 @@ function populateChat(chatHistory) {
 					var lastMessage = messages[messages.length - 1];
 					showFirstConversation(lastMessage);
 					for(var i = 0; i < messages.length; i++){
-						cloneChatBubble(messages[i].message);
+						cloneChatBubble(messages[i]);
 					}
 				} else {
 					//populate branch thread
@@ -120,14 +120,28 @@ function sendChat(){
     });
 }
 
-function cloneChatBubble(chatText){
+function cloneChatBubble(message){
+	var chatText = message.message;
+	var username = message.username;
+	var avatarLetter = username.charAt(0).toUpperCase();
+	var avatarColor = avatarColorsList[username.charCodeAt(0) % 4];
+	// console.log(avatarColor);
 	if (chatText.length > 0) {
 		$('.text-input').val("");
+		$('.chat-container div:nth-child(2)').addClass('first-chat-item');
+		$('.chat-container div:nth-last-child(2)').children().last().removeClass('animated-chat-line');
+		$('.chat-container').children().last().removeClass('last-chat-item');
+		$('.chat-container').children().last().children().last().addClass('animated-chat-line');
+		
 		$('.chat-item:first').clone()
+							.removeClass('animated-chat-line')
 							.appendTo(".chat-container")
 							.show()
 							.animate({top: "+=75px"}, 500)
-							.find(".chat-bubble").html(chatText);
+							.find(".chat-bubble").html(chatText)
+							.parent().find(".chat-avatar").html(avatarLetter)
+														  .css("background-color",avatarColor);
+		$('.chat-container').children().last().addClass('last-chat-item');
 		$('.chat-container').scrollTop($('.chat-container')[0].scrollHeight);
 	}
 }
