@@ -21,9 +21,7 @@ $(document).ready(function () {
     });
 
    	socket.on('send room message', function(msg) {
-		if (msg.branch == "main" && currentBranch == "main") {
-			cloneChatBubble(msg);
-		}
+		cloneChatBubble(msg, msg.topic);
     });
 
     $('li.conversation-item').click(function() {
@@ -40,16 +38,12 @@ $(document).ready(function () {
 function populateChat(chatHistory) {
 	if (!jQuery.isEmptyObject(chatHistory)) {
 		for (var topic in chatHistory) {
-			if (chatHistory.hasOwnProperty(topic)) {
+			if (chatHistory.hasOwnProperty(topic) && topic == currentBranch) {
 				var messages = chatHistory[topic].messages;
-				if (topic == "main" && currentBranch == "main") {
-					var lastMessage = messages[messages.length - 1];
-					showFirstConversation(lastMessage);
-					for(var i = 0; i < messages.length; i++){
-						cloneChatBubble(messages[i]);
-					}
-				} else {
-					//populate branch thread
+				var lastMessage = messages[messages.length - 1];
+				showFirstConversation(lastMessage);
+				for(var i = 0; i < messages.length; i++){
+					cloneChatBubble(messages[i], topic);
 				}
 			}
 		}
@@ -120,7 +114,7 @@ function sendChat(){
     });
 }
 
-function cloneChatBubble(message){
+function cloneChatBubble(message, topic){
 	var chatText = message.message;
 	var username = message.username;
 	var avatarLetter = username.charAt(0).toUpperCase();
@@ -132,6 +126,7 @@ function cloneChatBubble(message){
 		$('.chat-container').children().last().removeClass('last-chat-item');
 		$('.chat-container').children().last().children().last().addClass('animated-chat-line');
 		$('.chat-item:first').clone()
+							.attr("data-branch", "test")
 							.removeClass('animated-chat-line')
 							.appendTo(".chat-container")
 							.show()
@@ -143,7 +138,47 @@ function cloneChatBubble(message){
 							.parent().find(".chat-avatar").html(avatarLetter)
 														  .css("background-color",avatarColor)
 														  .css("display", message.isBranch ? "none" : "inline-block")
-		$('.chat-container').children().last().addClass('last-chat-item');
+		$('.chat-container').children().last().addClass('last-chat-item')
+											  .attr("data-branch", topic)
+											  .attr("data-isBranch", message.isBranch);
 		$('.chat-container').scrollTop($('.chat-container')[0].scrollHeight);
+		if (message.isBranch) {
+			openBranchOnClickListener($('.chat-container').children().last());		
+		}
 	}
 }
+
+function openBranchOnClickListener(branchMessage){
+	branchMessage.click(function(){
+		currentBranch = branchMessage.find(".chat-bubble").html();
+		$('.chat-item').each(function(){
+			if ($(this).attr("data-branch") == "main") {
+				$(this).find(".chat-bubble").fadeOut(100);
+				$(this).find(".chat-branch-line").fadeOut(250);
+				$(this).find(".chat-avatar").css("background-color", "#6D5782")
+											.html("");
+				if ($(this).attr("data-isBranch")) {
+					$(this).find(".chat-avatar").fadeIn(250);
+				} else {
+					$(this).find(".chat-avatar").animate({height:"25px", width:"25px"},250);
+				}
+			}
+		});
+	});
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
