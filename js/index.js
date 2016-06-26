@@ -53,7 +53,6 @@ function populateChat() {
 				var messages = chatHistory[topic].messages;
 				var lastMessage = messages[messages.length - 1];
 				showFirstConversation(lastMessage);
-				console.log(chatHistory[topic]);
 				var d = new Date(chatHistory[topic].datetime * 1000);
 				if (topic != "main") { 
 					$('.header:first').clone()
@@ -132,7 +131,6 @@ function updateLastMessage(conversation, lastMessage) {
 function sendChat(){
 	var chatText = $('.text-input').val();
 	chatText = chatText.replace(/</g, "&lt;").replace(/>/g, "&gt;");
-	console.log("sendChat current branch: " + currentBranch);
 	socket.emit('room message', {
         'branch_name': currentBranch, 
         'message': chatText, 
@@ -171,7 +169,6 @@ function cloneChatBubble(message, topic){
 	var avatarLetter = username.charAt(0).toUpperCase();
 	var avatarColor = avatarColorsList[username.charCodeAt(0) % 4];
 	var targetContainer;
-
 	if (topic=="main") {
 		targetContainer = ".chat-container";
 	} else {
@@ -192,7 +189,7 @@ function cloneChatBubble(message, topic){
 												 .css("background-color", message.isBranch ? "#6D5782" : "#FADBBF")
 												 .css("color", message.isBranch ? "#FFFFFF" : "#000000")
 							.parent().find(".chat-avatar").html(avatarLetter)
-														  .css("background-color",avatarColor)
+														  .css("background-color",avatarColor);
 		$(targetContainer).children().last().addClass('last-chat-item')
 											  .attr("data-branch", topic)
 											  .attr("data-isBranch", message.isBranch)
@@ -215,7 +212,8 @@ function openBranchOnClickListener(branchMessage){
 					$(this).find(".chat-branch-line").fadeOut(250);
 					$(this).find(".chat-avatar").css("background-color", "#6D5782")
 												.html("");
-					if ($(this).attr("data-isBranch")) {
+					if ($(this).attr("data-isBranch") && currentBranch == $(this).find(".chat-bubble").html()) {
+						$(this).find(".slant-line").fadeIn(100);
 						$(this).find(".chat-avatar").animate({height:"56px", width:"56px"},250,function(){
 							var sideBranchTopMargin = branchMessage.position().top;
 							$('.branch-chat-container').css("margin-top",sideBranchTopMargin)
@@ -227,15 +225,13 @@ function openBranchOnClickListener(branchMessage){
 				}
 			});
 			populateChat();
-
-
-
 		} else {
 			//go back to main thread
 			currentBranch = "main";
 			$('.chat-item').each(function(){
 				if ($(this).attr("data-branch") == "main") {
 					$('.branch-chat-container').empty();
+					$(this).find(".slant-line").fadeOut(100);
 					$(this).find(".chat-bubble").fadeIn(100);
 					$(this).find(".chat-branch-line").fadeIn(250);
 					$(this).find(".chat-avatar").css("background-color", avatarColorsList[$(this).attr("data-username").charCodeAt(0) % 4])
