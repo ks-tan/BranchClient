@@ -53,11 +53,52 @@ button:focus {
 	font-size: 18px;
 	}
 
+	ul.conversations {list-style: none;padding-left: 0px;margin-top: 0px;border-top-color: #FDB989;border-width: 1px 0px 0px 0px;border-style: solid;}
+
 	.conversation-list {
 
 	}
 
+	li.conversation-item {width: 100%;height: 72px;display: flex;flex-direction: row;align-items: center;position: relative;overflow-x: hidden;}
 
+	.conversation-avatar {height: 56px;width: 56px;margin: 8px;border-radius: 4px;flex: 0 0 56px;}
+
+	.conversation-title-container {flex: 0 0 56px;}
+
+	.conversation-title {
+		color: white;
+		font-family: 'Open Sans', Sans-serif;
+		font-size: 18px;
+		position: absolute;
+		top: 8px;
+		width: 132px;
+		overflow: hidden;
+		white-space: nowrap;
+		text-overflow: ellipsis;
+	}
+
+	.conversation-timestamp {
+		font-size: 10px;
+		position: absolute;
+		right: 10px;
+		top: 16px;
+		color: cornsilk;
+		font-family: 'Open Sans', sans-serif;
+	}
+
+	.conversation-last-message {
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		width: 155px;
+		position: absolute;
+		bottom: 12px;
+		color: cornsilk;
+		font-family: 'Open Sans', sans-serif;
+		font-size: 11px;
+	}
+
+	.conversation-horizontal-divider {height: 1px;width: 155px;background-color: #FDB989;position: absolute;bottom: 0px;}
 
 	.main-chat-screen {
 		width: 73%;
@@ -130,5 +171,4 @@ button:focus {
 
 	.main-chat-screen {
 		width: 70%;
-		height: 100%;
-	}
+		height: 1

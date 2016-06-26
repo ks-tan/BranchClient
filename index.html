@@ -11,20 +11,70 @@
   <link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="css/style.css">
 
+  <script type="text/javascript" src="js/jquery-3.0.0.min.js"></script> 
+
 
 </head>
 
 <body>
-  <script src="js/index.js"></script>
-
 	<div class="main-container">
-	  <div class="left-sidebar">
+	  <div class="left-sidebar">		 
+	   	<div class="search-container">
+	  		<img src="assets/magnifyingGlass.png" class="search-image">
+  			<input class="search-input">
+	  		</input>
+	  	</div>
 	  	<div class="conversation-list">
-		  	<div class="search-container">
-		  		<img src="assets/magnifyingGlass.png" class="search-image">
-	  			<input class="search-input">
-		  		</input>
-		  	</div>
+	  		<ul class="conversations">
+	  			<li class="conversation-item">
+	  				<img class="conversation-avatar" src="assets/newyork.jpg">
+	  				<div class="conversation-title-container">
+	  					<div class="conversation-title">
+		  					Friends 5ever
+	  					</div>
+	  					<div class="conversation-timestamp">
+	  						12m
+	  					</div>
+	  					<div class="conversation-last-message">
+	  						Steve: When are you guys free?
+	  					</div>
+		  				<div class="conversation-horizontal-divider">
+	  					</div>
+	  				</div>
+	  			</li>
+	  			<li class="conversation-item">
+	  				<img class="conversation-avatar" src="assets/disneyland.jpg">
+	  				<div class="conversation-title-container">
+	  					<div class="conversation-title">
+		  					Bros 4 lyf
+	  					</div>
+	  					<div class="conversation-timestamp">
+	  						36m
+	  					</div>
+	  					<div class="conversation-last-message">
+	  						Brad: No way man you gotta try it out first at least
+	  					</div>
+		  				<div class="conversation-horizontal-divider">
+	  					</div>
+	  				</div>
+	  			</li>
+	  			<li class="conversation-item">
+	  				<img class="conversation-avatar" src="assets/chicago.jpg">
+	  				<div class="conversation-title-container">
+	  					<div class="conversation-title">
+		  					Family
+	  					</div>
+	  					<div class="conversation-timestamp">
+	  						1h
+	  					</div>
+	  					<div class="conversation-last-message">
+	  						Pops: Get the newspaper for me will you
+	  					</div>
+		  				<div class="conversation-horizontal-divider">
+	  					</div>
+	  				</div>
+	  			</li>
+	  		</ul>
 	    </div>
 	  </div><div class="main-chat-screen">
 	  	<div class="chat-title-bar">
@@ -54,5 +104,6 @@
 	  	</div>
 	  </div>
 	</div>
+  <script src="js/index.js"></script>
 </body>
 </html>
