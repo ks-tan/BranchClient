@@ -33,6 +33,7 @@ $(document).ready(function () {
         chatHistory[topic].datetime = info['datetime'];
         chatHistory[topic].activity = info['activity'];
         chatHistory[topic].sentiments = info['sentiments'];
+        setHeader(topic, false);
     });
 
     $('li.conversation-item').click(function() {
@@ -46,6 +47,31 @@ $(document).ready(function () {
 	});
 });
 
+function setHeader(topic, append) {
+	console.log(chatHistory[topic])
+	var d = new Date(chatHistory[topic].datetime * 1000);
+	var sentimentString = '';
+	for (var sentiment in chatHistory[topic].sentiments) {
+		if (chatHistory[topic].sentiments[sentiment] == 'positive') {
+			sentimentString += "<br>" + sentiment + ": 😄";
+		} else if (chatHistory[topic].sentiments[sentiment] == 'neutral') {
+			sentimentString += "<br>" + sentiment + ": 😐";
+		} else {
+			sentimentString += "<br>" + sentiment + ": 😡";
+		}
+	}
+	if (topic != "main") { 
+		if (append) {
+			$('.header:first').clone()
+						  .appendTo('.branch-chat-container');
+		}
+		$('.branch-chat-container .header').show();
+		$('.branch-chat-container .header .activity').html(chatHistory[topic].activity);
+		$('.branch-chat-container .header .description').html(chatHistory[topic].location + ", " + d.toUTCString());
+		$('.branch-chat-container .header .sentiments').html(sentimentString);
+	}
+}
+
 function populateChat() {
 	if (!jQuery.isEmptyObject(chatHistory)) {
 		for (var topic in chatHistory) {
@@ -53,15 +79,7 @@ function populateChat() {
 				var messages = chatHistory[topic].messages;
 				var lastMessage = messages[messages.length - 1];
 				showFirstConversation(lastMessage);
-				console.log(chatHistory[topic]);
-				var d = new Date(chatHistory[topic].datetime * 1000);
-				if (topic != "main") { 
-					$('.header:first').clone()
-									  .appendTo('.branch-chat-container');
-					$('.branch-chat-container .header').show();
-					$('.branch-chat-container .header .activity').html(chatHistory[topic].activity);
-					$('.branch-chat-container .header .description').html(chatHistory[topic].location + ", " + d.toUTCString());
-				}
+				setHeader(topic, true);
 				for(var i = 0; i < messages.length; i++){
 					cloneChatBubble(messages[i], topic);
 				}
