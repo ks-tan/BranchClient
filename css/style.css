@@ -274,6 +274,15 @@ button.send-button {
 	padding-top: 4px;
 }
 
+.slant-line {
+	display: none;
+	position: absolute;
+	width: 82px;
+	height: 7px;
+	top: 22px;
+	background-color: #6D5782;
+}
+
 .chat-branch-line {
 	position: absolute;
 	margin-left: 23px;
