@@ -22,6 +22,7 @@ $(document).ready(function () {
    	socket.on('send room message', function(msg) {
 		if (msg.branch == "main" && currentBranch == "main") {
 			cloneChatBubble(msg.message);
+			updateLastMessage(getConversationFromIndex(0), msg);
 		}
     });
 
@@ -42,8 +43,8 @@ function populateChat(chatHistory) {
 			if (chatHistory.hasOwnProperty(topic)) {
 				var messages = chatHistory[topic].messages;
 				if (topic == "main" && currentBranch == "main") {
-					var lastMesage = messages[messages.length - 1];
-					showFirstConversation(lastMesage.username + ": " + lastMesage.message);
+					var lastMessage = messages[messages.length - 1];
+					showFirstConversation(lastMessage);
 					for(var i = 0; i < messages.length; i++){
 						cloneChatBubble(messages[i].message);
 					}
@@ -75,6 +76,9 @@ function sendButtonOnClickListener() {
 	});
 }
 
+function getConversationFromIndex(index) {
+	return $('ul.conversations li:nth-child(' + (index + 1) + ')');
+}
 
 function showFirstConversation(lastMessage) {
 	var firstConversation = $('ul.conversations li:nth-child(1)');
@@ -95,7 +99,15 @@ function updateParticipants(conversationIndex) {
 }
 
 function updateLastMessage(conversation, lastMessage) {
-	conversation.find('.conversation-last-message').html(lastMessage);
+	var userNameString;
+	if (lastMessage.username == username) {
+		userNameString = "";
+	} else {
+		userNameString = lastMessage.username + ": ";
+	}
+	var lastMessageString = userNameString + lastMessage.message;
+
+	conversation.find('.conversation-last-message').html(lastMessageString);
 }
 
 function sendChat(){
