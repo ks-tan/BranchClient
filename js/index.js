@@ -27,6 +27,13 @@ $(document).ready(function () {
    		};
     });
 
+    socket.on('branch info', function(info) {
+    	var topic = info['branch_name'];
+        chatHistory[topic].location = info['location'];
+        chatHistory[topic].datetime = info['datetime'];
+        chatHistory[topic].activity = info['activity'];
+    });
+
     $('li.conversation-item').click(function() {
 		$('li.conversation-item').each(function( index ) {
 		  	$(this).removeClass('conversation-item-selected');
@@ -152,7 +159,7 @@ function syncLocalMessages(msg) {
 	chatHistory[msg.branch] = {
 		'messages' : [{
 			'message': msg.message,
-			'username': username
+			'username': msg.username
 		}]
 	};
 }
@@ -163,7 +170,6 @@ function cloneChatBubble(message, topic){
 	var avatarLetter = username.charAt(0).toUpperCase();
 	var avatarColor = avatarColorsList[username.charCodeAt(0) % 4];
 	var targetContainer;
-			console.log(message);
 
 	if (topic=="main") {
 		targetContainer = ".chat-container";
