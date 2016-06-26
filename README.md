@@ -8,6 +8,7 @@ Branch rect	 :	#6D5782
 Sidebar		 :	#AD7282
 Top/btm bars :	#FDB989
 Background	 :	#FFF3E4
+Chat bubble	 :	#FADBBF
 
 #Other Colors
 Red		:	#EE6D79

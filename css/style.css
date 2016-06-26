@@ -1,6 +1,7 @@
 .main-container {
 	width: 100%;
 	height: 100%;
+	font-family: 'Open Sans',sans-serif;
 }
 
 input:focus,
@@ -134,8 +135,11 @@ button:focus {
 
 	.chat-container {
 		width: 100%;
+		height: 100px;
 		background: #FFF3E4;
 		flex: 1 0 auto;
+		overflow-y: scroll;
+		padding-bottom: 40px;
 	}
 
 	.text-input-container {
@@ -157,7 +161,6 @@ button:focus {
 		border-width: 0px;
 		border-radius: 4px;
 		font-size: 14px;
-		font-family: 'Open Sans',sans-serif;
 	}
 
 	button.branch-button {
@@ -177,6 +180,33 @@ button:focus {
 		background-color: rgba(0,0,0,0);
 		border-width: 0px;
 		padding-top: 4px;
+	}
+
+	.chat-item {
+		position: relative;
+		display: none;
+		top:-75px;
+		margin: 20px;
+	}
+
+	.chat-bubble {
+		border-radius: 10px;
+		display: inline-block;
+		max-width: 350px;
+		background-color: #FADBBF;
+		vertical-align: top;
+		padding: 10px;
+		word-wrap: break-word;
+	}
+
+	.chat-avatar {
+		display: inline-block;
+		border-radius: 50%;
+		width: 55px;
+		height: 55px;
+		background-color: #6D5782;
+		margin: auto;
+		vertical-align: top;
 	}
 }
 
