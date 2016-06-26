@@ -1,8 +1,29 @@
-var name = "";
+var socket = io.connect('http://localhost:5000/branch');
+var chatHistory = "";
+var username = "";
 
 $(document).ready(function () {
+
+	loginButtonOnClickListener();
+
  	sendButtonOnClickListener();
+
+ 	socket.on('joined room', function(msg) {
+        chatHistory = msg.chat;
+        $('.login-screen').hide();
+        $('.main-container').fadeIn(1000);
+    });
+
 });
+
+function loginButtonOnClickListener(){
+	$('.login-button').click(function(){
+		username = $('.login-name').val();
+		if (username.length > 0) {
+			socket.emit('join', {'username': username});
+		}
+	});
+}
 
 function sendButtonOnClickListener() {
 	$('.send-button').click(function(){
