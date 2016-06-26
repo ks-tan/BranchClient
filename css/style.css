@@ -2,6 +2,22 @@
 	width: 100%;
 	height: 100%;
 	font-family: 'Open Sans',sans-serif;
+	display: none;
+}
+
+.loginScreen {
+	position: relative;
+	width: 100%;
+	height: 100%;
+}
+
+.loginBox {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	margin: -200px 0 0 -200px;
+	width: 400px;
+	height: 375px;
 }
 
 input:focus,
