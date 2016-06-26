@@ -42,6 +42,24 @@ function sendButtonOnClickListener() {
 			sendChat();
 		}
 	});
+	$('li.conversation-item').click(function() {
+		$('li.conversation-item').each(function( index ) {
+		  $(this).removeClass('conversation-item-selected');
+		});
+		$(this).addClass('conversation-item-selected');
+		$('.chat-title-bar-title').text($(this).find('.conversation-title').text());
+		$('#conversation-title-avatar').attr("src",$(this).find('.conversation-avatar').prop('src'));
+	});
+
+	// on startup function calls
+	showFirstConversation();
+});
+
+function showFirstConversation() {
+	var firstConversation = $('ul.conversations li:nth-child(1)');
+	firstConversation.addClass('conversation-item-selected');
+	$('.chat-title-bar-title').text(firstConversation.find('.conversation-title').text());
+	$('#conversation-title-avatar').attr("src",firstConversation.find('.conversation-avatar').prop('src'));
 }
 
 function sendChat(){
