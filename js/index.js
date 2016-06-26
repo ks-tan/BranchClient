@@ -31,7 +31,11 @@ $(document).ready(function () {
 
 function populateChat(chatHistory) {
 	if (!jQuery.isEmptyObject(chatHistory)) {
-
+		for (var topic in chatHistory) {
+			if (chatHistory.hasOwnProperty(topic)) {
+				console.log(chatHistory[topic]);
+			}
+		}
 	}
 }
 
@@ -66,7 +70,11 @@ function showFirstConversation() {
 function sendChat(){
 	var chatText = $('.text-input').val();
 	chatText = chatText.replace(/</g, "&lt;").replace(/>/g, "&gt;");
-	if (charText.length > 0) {
+	cloneChatBubble(chatText);
+}
+
+function cloneChatBubble(chatText){
+	if (chatText.length > 0) {
 		$('.text-input').val("");
 		$('.chat-item:first').clone()
 							.appendTo(".chat-container")
