@@ -32,6 +32,7 @@ $(document).ready(function () {
         chatHistory[topic].location = info['location'];
         chatHistory[topic].datetime = info['datetime'];
         chatHistory[topic].activity = info['activity'];
+        chatHistory[topic].sentiments = info['sentiments'];
     });
 
     $('li.conversation-item').click(function() {
