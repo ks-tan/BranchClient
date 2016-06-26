@@ -211,10 +211,26 @@ li.conversation-item:not(.conversation-item-selected):hover {
 }
 
 .branch-chat-container {
-	display: inline-block;
-	width:100px;
+	display: none;
 	height: 100px;
-	background-color: black;
+	flex: 1 0 auto;
+	padding-bottom: 40px;
+	vertical-align: top;
+}
+
+.header {
+	display: none;
+	padding: 10px;
+	width: 100%;
+	background-color: #6D5782;
+	border-radius: 10px;
+	margin-top: -55px;
+	color: #FFFFFF;
+	text-align: center;
+}
+
+.header .activity {
+	font-size: 20px;
 }
 
 .text-input-container {

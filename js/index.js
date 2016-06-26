@@ -17,7 +17,7 @@ $(document).ready(function () {
         currentBranch = "main";
         $('.login-screen').hide();
         $('.main-container').fadeIn(1000);
-    	populateChat(chatHistory);
+    	populateChat();
     });
 
    	socket.on('send room message', function(msg) {
@@ -35,13 +35,20 @@ $(document).ready(function () {
 	});
 });
 
-function populateChat(chatHistory) {
+function populateChat() {
 	if (!jQuery.isEmptyObject(chatHistory)) {
 		for (var topic in chatHistory) {
 			if (chatHistory.hasOwnProperty(topic) && topic == currentBranch) {
 				var messages = chatHistory[topic].messages;
 				var lastMessage = messages[messages.length - 1];
 				showFirstConversation(lastMessage);
+				if (topic != "main") {
+					$('.header:first').clone()
+									  .appendTo('.branch-chat-container');
+					$('.branch-chat-container .header').show();
+					$('.branch-chat-container .header .activity').html(chatHistory[topic].activity);
+					$('.branch-chat-container .header .description').html(chatHistory[topic].location);
+				}
 				for(var i = 0; i < messages.length; i++){
 					cloneChatBubble(messages[i], topic);
 				}
@@ -119,51 +126,83 @@ function cloneChatBubble(message, topic){
 	var username = message.username;
 	var avatarLetter = username.charAt(0).toUpperCase();
 	var avatarColor = avatarColorsList[username.charCodeAt(0) % 4];
+	var targetContainer;
+	if (currentBranch=="main") {
+		targetContainer = ".chat-container";
+	} else {
+		targetContainer = ".branch-chat-container";
+	}
 	if (chatText.length > 0) {
 		$('.text-input').val("");
-		$('.chat-container div:nth-child(2)').addClass('first-chat-item');
-		$('.chat-container div:nth-last-child(2)').children().last().removeClass('animated-chat-line');
-		$('.chat-container').children().last().removeClass('last-chat-item');
-		$('.chat-container').children().last().children().last().addClass('animated-chat-line');
+		$(targetContainer + ' div:nth-child(2)').addClass('first-chat-item');
+		$(targetContainer + ' div:nth-last-child(2)').children().last().removeClass('animated-chat-line');
+		$(targetContainer).children().last().removeClass('last-chat-item');
+		$(targetContainer).children().last().children().last().addClass('animated-chat-line');
 		$('.chat-item:first').clone()
-							.attr("data-branch", topic)
 							.removeClass('animated-chat-line')
-							.appendTo(".chat-container")
+							.appendTo(targetContainer)
 							.show()
 							.animate({top: "+=75px"}, 500)
 							.find(".chat-bubble").html(chatText)
 												 .css("background-color", message.isBranch ? "#6D5782" : "#FADBBF")
 												 .css("color", message.isBranch ? "#FFFFFF" : "#000000")
-												 .css("margin-left", message.isBranch ? "55px" : "0px")
 							.parent().find(".chat-avatar").html(avatarLetter)
 														  .css("background-color",avatarColor)
-														  .css("display", message.isBranch ? "none" : "inline-block")
-		$('.chat-container').children().last().addClass('last-chat-item')
+		$(targetContainer).children().last().addClass('last-chat-item')
 											  .attr("data-branch", topic)
-											  .attr("data-isBranch", message.isBranch);
-		$('.chat-container').scrollTop($('.chat-container')[0].scrollHeight);
+											  .attr("data-isBranch", message.isBranch)
+											  .attr("data-username", message.username);
+		$(targetContainer).scrollTop($(targetContainer)[0].scrollHeight);
 		if (message.isBranch) {
-			openBranchOnClickListener($('.chat-container').children().last());		
+			openBranchOnClickListener($(targetContainer).children().last());		
 		}
 	}
 }
 
 function openBranchOnClickListener(branchMessage){
 	branchMessage.click(function(){
-		currentBranch = branchMessage.find(".chat-bubble").html();
-		$('.chat-item').each(function(){
-			if ($(this).attr("data-branch") == "main") {
-				$(this).find(".chat-bubble").fadeOut(100);
-				$(this).find(".chat-branch-line").fadeOut(250);
-				$(this).find(".chat-avatar").css("background-color", "#6D5782")
-											.html("");
-				if ($(this).attr("data-isBranch")) {
-					$(this).find(".chat-avatar").fadeIn(250);
-				} else {
-					$(this).find(".chat-avatar").animate({height:"25px", width:"25px"},250);
+		if (currentBranch == "main") {
+			//go to branch thread
+			currentBranch = branchMessage.find(".chat-bubble").html();
+			$('.chat-item').each(function(){
+				if ($(this).attr("data-branch") == "main") {
+					$(this).find(".chat-bubble").fadeOut(100);
+					$(this).find(".chat-branch-line").fadeOut(250);
+					$(this).find(".chat-avatar").css("background-color", "#6D5782")
+												.html("");
+					if ($(this).attr("data-isBranch")) {
+						$(this).find(".chat-avatar").animate({height:"56px", width:"56px"},250,function(){
+							var sideBranchTopMargin = branchMessage.position().top;
+							$('.branch-chat-container').css("margin-top",sideBranchTopMargin)
+													   .css("display", "inline-block");
+						});
+					} else {
+						$(this).find(".chat-avatar").animate({height:"25px", width:"25px"},250);
+					}
 				}
-			}
-		});
+			});
+			populateChat();
+
+
+
+		} else {
+			//go back to main thread
+			currentBranch = "main";
+			$('.chat-item').each(function(){
+				if ($(this).attr("data-branch") == "main") {
+					$('.branch-chat-container').empty();
+					$(this).find(".chat-bubble").fadeIn(100);
+					$(this).find(".chat-branch-line").fadeIn(250);
+					$(this).find(".chat-avatar").css("background-color", avatarColorsList[$(this).attr("data-username").charCodeAt(0) % 4])
+												.html($(this).attr("data-username").charAt(0));
+					if ($(this).attr("data-isBranch")) {
+						$(this).find(".chat-avatar").animate({height:"55px", width:"55px"},100);
+					} else {
+						$(this).find(".chat-avatar").animate({height:"55px", width:"55px"},100);
+					}
+				}
+			});
+		}
 	});
 }
 
