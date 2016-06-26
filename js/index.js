@@ -16,6 +16,17 @@ $(document).ready(function () {
     	populateChat(chatHistory);
     });
 
+    $('li.conversation-item').click(function() {
+		$('li.conversation-item').each(function( index ) {
+		  	$(this).removeClass('conversation-item-selected');
+		});
+		$(this).addClass('conversation-item-selected');
+		$('.chat-title-bar-title').text($(this).find('.conversation-title').text());
+		$('#conversation-title-avatar').attr("src",$(this).find('.conversation-avatar').prop('src'));
+	});
+
+	// on startup function calls
+	showFirstConversation();
 });
 
 function populateChat(chatHistory) {
@@ -42,18 +53,8 @@ function sendButtonOnClickListener() {
 			sendChat();
 		}
 	});
-	$('li.conversation-item').click(function() {
-		$('li.conversation-item').each(function( index ) {
-		  $(this).removeClass('conversation-item-selected');
-		});
-		$(this).addClass('conversation-item-selected');
-		$('.chat-title-bar-title').text($(this).find('.conversation-title').text());
-		$('#conversation-title-avatar').attr("src",$(this).find('.conversation-avatar').prop('src'));
-	});
+}
 
-	// on startup function calls
-	showFirstConversation();
-});
 
 function showFirstConversation() {
 	var firstConversation = $('ul.conversations li:nth-child(1)');
