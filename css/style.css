@@ -26,7 +26,31 @@ button:focus {
 	}
 
 	.search-container {
-		
+		height: 72px;
+		display: flex;
+		align-items: center;
+		text-align: center;
+		flex-direction: row;
+		justify-content: center;
+	}
+
+	.search-image {
+		height: 26px;
+		width: 26px;
+		position: absolute;
+		top: 23px;
+		left: 11px;
+	}
+
+	input.search-input {
+	margin-left: 16px;
+	margin-right: 16px;
+	/* flex: 1 0 auto; */
+	line-height: 32px;
+	border-radius: 8px;
+	border-width: 0px;
+	padding-left: 32px;
+	font-size: 18px;
 	}
 
 	.conversation-list {
