@@ -10,7 +10,7 @@ $(document).ready(function () {
 
 	loginButtonOnClickListener();
 
- 	sendButtonOnClickListener();
+ 	sendAndBranchButtonOnClickListener();
 
  	socket.on('joined room', function(msg) {
         chatHistory = msg.chat;
@@ -21,7 +21,10 @@ $(document).ready(function () {
     });
 
    	socket.on('send room message', function(msg) {
-		cloneChatBubble(msg, msg.branch);
+   		syncLocalMessages(msg);
+   		if (msg.branch == currentBranch) {
+			cloneChatBubble(msg, msg.branch);
+   		};
     });
 
     $('li.conversation-item').click(function() {
@@ -42,12 +45,14 @@ function populateChat() {
 				var messages = chatHistory[topic].messages;
 				var lastMessage = messages[messages.length - 1];
 				showFirstConversation(lastMessage);
-				if (topic != "main") {
+				console.log(chatHistory[topic]);
+				var d = new Date(chatHistory[topic].datetime * 1000);
+				if (topic != "main") { 
 					$('.header:first').clone()
 									  .appendTo('.branch-chat-container');
 					$('.branch-chat-container .header').show();
 					$('.branch-chat-container .header .activity').html(chatHistory[topic].activity);
-					$('.branch-chat-container .header .description').html(chatHistory[topic].location);
+					$('.branch-chat-container .header .description').html(chatHistory[topic].location + ", " + d.toUTCString());
 				}
 				for(var i = 0; i < messages.length; i++){
 					cloneChatBubble(messages[i], topic);
@@ -66,12 +71,17 @@ function loginButtonOnClickListener(){
 	});
 }
 
-function sendButtonOnClickListener() {
+function sendAndBranchButtonOnClickListener() {
 	$('.send-button').click(function(){
  		sendChat(); 		
 	});
-	$('.text-input').keypress(function(e){
-		if (e.which == 13) {
+	$('.branch-button').click(function(){
+ 		branchChat(); 		
+	});
+	$('.text-input').keydown(function(e){
+		if (e.which == 13 && (e.metaKey)) {
+			branchChat();
+		} else if (e.which == 13) {
 			sendChat();
 		}
 	});
@@ -114,11 +124,37 @@ function updateLastMessage(conversation, lastMessage) {
 function sendChat(){
 	var chatText = $('.text-input').val();
 	chatText = chatText.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+	console.log("sendChat current branch: " + currentBranch);
 	socket.emit('room message', {
         'branch_name': currentBranch, 
         'message': chatText, 
         'username':username
     });
+}
+
+function branchChat() {
+	var chatText = $('.text-input').val();
+	chatText = chatText.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+	socket.emit('room message', {
+        'branch_name': chatText, 
+        'message': chatText, 
+        'username':username
+    });
+}
+
+function syncLocalMessages(msg) {
+	for (var topic in chatHistory) {
+		if (chatHistory.hasOwnProperty(topic) && topic == msg.branch) {
+			chatHistory[topic].messages.push(msg);
+			return;
+		}
+	}
+	chatHistory[msg.branch] = {
+		'messages' : [{
+			'message': msg.message,
+			'username': username
+		}]
+	};
 }
 
 function cloneChatBubble(message, topic){
@@ -127,7 +163,9 @@ function cloneChatBubble(message, topic){
 	var avatarLetter = username.charAt(0).toUpperCase();
 	var avatarColor = avatarColorsList[username.charCodeAt(0) % 4];
 	var targetContainer;
-	if (currentBranch=="main") {
+			console.log(message);
+
+	if (topic=="main") {
 		targetContainer = ".chat-container";
 	} else {
 		targetContainer = ".branch-chat-container";
@@ -152,7 +190,7 @@ function cloneChatBubble(message, topic){
 											  .attr("data-branch", topic)
 											  .attr("data-isBranch", message.isBranch)
 											  .attr("data-username", message.username);
-		$(targetContainer).scrollTop($(targetContainer)[0].scrollHeight);
+		$('.chat-section').scrollTop($('.chat-section')[0].scrollHeight);
 		if (message.isBranch) {
 			openBranchOnClickListener($(targetContainer).children().last());		
 		}
