@@ -1,5 +1,5 @@
 var socket = io.connect('http://localhost:5000/branch');
-var avatarColorsList = ['#EE6D79','#71E096','#D6D6D6','#90D3F7'];
+var avatarColorsList = ['#EE6D79','#71E096','#698EE0','#93D4F4'];
 var chatHistory = "";
 var currentBranch = "";
 var username = "";
