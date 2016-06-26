@@ -1,5 +1,6 @@
 var socket = io.connect('http://localhost:5000/branch');
 var chatHistory = "";
+var currentBranch = "";
 var username = "";
 
 $(document).ready(function () {
@@ -10,10 +11,16 @@ $(document).ready(function () {
 
  	socket.on('joined room', function(msg) {
         chatHistory = msg.chat;
-        console.log(chatHistory);
+        currentBranch = "main";
         $('.login-screen').hide();
         $('.main-container').fadeIn(1000);
     	populateChat(chatHistory);
+    });
+
+   	socket.on('send room message', function(msg) {
+		if (msg.branch == "main" && currentBranch == "main") {
+			cloneChatBubble(msg.message);
+		}
     });
 
     $('li.conversation-item').click(function() {
@@ -33,7 +40,14 @@ function populateChat(chatHistory) {
 	if (!jQuery.isEmptyObject(chatHistory)) {
 		for (var topic in chatHistory) {
 			if (chatHistory.hasOwnProperty(topic)) {
-				console.log(chatHistory[topic]);
+				var messages = chatHistory[topic].messages;
+				if (topic == "main" && currentBranch == "main") {
+					for(var i = 0; i < messages.length; i++){
+						cloneChatBubble(messages[i].message);
+					}
+				} else {
+					//populate branch thread
+				}
 			}
 		}
 	}
@@ -59,7 +73,6 @@ function sendButtonOnClickListener() {
 	});
 }
 
-
 function showFirstConversation() {
 	var firstConversation = $('ul.conversations li:nth-child(1)');
 	firstConversation.addClass('conversation-item-selected');
@@ -70,7 +83,11 @@ function showFirstConversation() {
 function sendChat(){
 	var chatText = $('.text-input').val();
 	chatText = chatText.replace(/</g, "&lt;").replace(/>/g, "&gt;");
-	cloneChatBubble(chatText);
+	socket.emit('room message', {
+        'branch_name': currentBranch, 
+        'message': chatText, 
+        'username':username
+    });
 }
 
 function cloneChatBubble(chatText){
